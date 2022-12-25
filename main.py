@@ -13,7 +13,6 @@ class Range:
     aindex_end: int
 
 
-
 def common_roots(quran: Quran, ranges: list[Range], min_nonpresent_cnt: int = 0):
     rf_all = []
     common_roots = {}
@@ -67,5 +66,6 @@ def read_item(data_string: str, min_nonpresent_cnt: int):
     
     print(data)
 
-    return json.dumps(ret, ensure_ascii=False).encode('utf8')
+    # return json.dumps(ret, ensure_ascii=False).encode('utf8')
     # return {"data_string": data_string, "min_nonpresent_cnt": min_nonpresent_cnt}
+    return ret
