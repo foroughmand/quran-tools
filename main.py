@@ -69,9 +69,8 @@ from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
 origins = [
-    "*://foroughmand.ir",
-    "*://*.foroughmand.ir",
-    "*://localhost:8000",
+    "https://foroughmand.ir",
+    "http://localhost:8000",
 ]
 
 app.add_middleware(
