@@ -65,8 +65,24 @@ def common_roots(quran: Quran, ranges: list[Range], min_nonpresent_cnt: int = 0,
     
 from typing import Union
 from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
 
 app = FastAPI()
+origins = [
+    "http://foroughmand.ir",
+    "http://*.foroughmand.ir",
+    "https://foroughmand.ir",
+    "https://*.foroughmand.ir",
+    "http://localhost:8000",
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get('/common_roots/ranges={data_string}&min_nonpresent_cnt={min_nonpresent_cnt}&root_type={root_type}&ret_instances={ret_instances}')
 def read_item(data_string: str, min_nonpresent_cnt: int, root_type: int, ret_instances: bool):
