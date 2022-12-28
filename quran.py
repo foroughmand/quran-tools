@@ -17,12 +17,12 @@ class Quran:
             # print('cache loaded ...')
             all_data = pickle.load(open(fn_cache, "rb"))
 
-            self.data_word_roman, self.data_root_roman = all_data['data_word_roman'], all_data['data_root_roman']
+            self.data_word_roman, self.data_root_roman, self.data_lem_roman = all_data['data_word_roman'], all_data['data_root_roman'], all_data['data_lem_roman']
             self.info_count_sure, self.info_count_aye, self.info_count_token = all_data['info_count_sure'], all_data['info_count_aye'], all_data['info_count_token']
             self.roman2arabic = all_data['roman2arabic']
 
         else:
-            self.data_word_roman, self.data_root_roman = {}, {}
+            self.data_word_roman, self.data_root_roman, self.data_lem_roman = {}, {}, {}
             self.info_count_sure, self.info_count_aye, self.info_count_token = 0, {}, {}
             with open(fn) as f:
                 for l in f:
@@ -50,9 +50,12 @@ class Quran:
                     if 'ROOT' in [s[0] for s in props]:
                         # print('set root for ', loc, loc_pt, props[[s[0] for s in props].index('ROOT')][1])
                         self.data_root_roman[loc_pt] = props[[s[0] for s in props].index('ROOT')][1]
+                    if 'LEM' in [s[0] for s in props]:
+                        # print('set root for ', loc, loc_pt, props[[s[0] for s in props].index('ROOT')][1])
+                        self.data_lem_roman[loc_pt] = props[[s[0] for s in props].index('LEM')][1]
             self.roman2arabic = pickle.load(open(fn_romantoarabic, "rb"))
 
-            all_data = {'data_word_roman': self.data_word_roman, 'data_root_roman': self.data_root_roman, 'info_count_sure': self.info_count_sure, 'info_count_aye': self.info_count_aye, 'info_count_token': self.info_count_token, 'roman2arabic' : self.roman2arabic}
+            all_data = {'data_word_roman': self.data_word_roman, 'data_root_roman': self.data_root_roman, 'data_lem_roman': self.data_lem_roman, 'info_count_sure': self.info_count_sure, 'info_count_aye': self.info_count_aye, 'info_count_token': self.info_count_token, 'roman2arabic' : self.roman2arabic}
             pickle.dump(all_data, open(fn_cache, 'wb'))
 
     def deroman(self, s):
@@ -82,6 +85,17 @@ class Quran:
         if ploc not in self.data_root_roman:
             return None
         return self.data_root_roman[ploc]
+    
+    def lem(self, sindex, aindex, tindex):
+        rr = self.lem_roman(sindex, aindex, tindex)
+        if rr is None: return None
+        return self.deroman(rr)
+
+    def lem_roman(self, sindex, aindex, tindex):
+        ploc = Quran.loc_pack_tocken((sindex, aindex, tindex))
+        if ploc not in self.data_lem_roman:
+            return None
+        return self.data_lem_roman[ploc]
     
     def token(self, sindex, aindex, tindex):
         return self.deroman(self.token_roman(sindex, aindex, tindex))
@@ -130,12 +144,21 @@ class Token:
         self.sindex = sindex
         self.aindex = aindex
         self.tindex = tindex
+
+    def loc(self):
+        return (self.sindex, self.aindex, self.tindex)
     
     def root(self):
         return self.quran.root(self.sindex, self.aindex, self.tindex)
 
     def root_roman(self):
         return self.quran.root_roman(self.sindex, self.aindex, self.tindex)
+
+    def lem(self):
+        return self.quran.lem(self.sindex, self.aindex, self.tindex)
+
+    def lem_roman(self):
+        return self.quran.lem_roman(self.sindex, self.aindex, self.tindex)
 
     def token(self):
         return self.quran.token(self.sindex, self.aindex, self.tindex)
