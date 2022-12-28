@@ -74,7 +74,9 @@
 let qUI = $('<select>')
 let aBegin = $('<select>')
 let aEnd = $('<select>')
-$('#form').append(qUI, aBegin, aEnd)
+$('#form').append(
+    $('<lable>').text('محدوده:')
+).append(qUI, aBegin, aEnd)
 QuranData.Sura.forEach((s, sI) => {
     // console.log(s, sI)
     if (s.length > 4) {
@@ -145,14 +147,18 @@ let root_typeUI = $('<select>')
         value: 1,
         text: 'لم'
     }))
-$('#form').append(root_typeUI)
+$('#form').append(
+    $('<lable>').text('نوع:')
+).append(root_typeUI)
 
 let min_nonpresent_cntUI = $('<input>')
     .attr('type', 'text')
     .attr('class', 'number')
     .val(0)
     .spinner()
-$('#form').append(min_nonpresent_cntUI)
+$('#form').append(
+    $('<lable>').text('حداکثر در چند محدوده نباشد:')
+).append(min_nonpresent_cntUI)
 
 let draw = $('<span>')
     .attr('id', 'draw')
